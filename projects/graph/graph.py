@@ -8,21 +8,58 @@ class Graph:
     def __init__(self):
         self.vertices = {}
     def add_vertex(self, vertex):
-        """
-        Add a vertex to the graph.
-        """
-        pass  # TODO
+        self.vertices[vertex] = set()
     def add_edge(self, v1, v2):
-        """
-        Add a directed edge to the graph.
-        """
-        pass  # TODO
+
+        if(len(self.vertices[v1]) == 0):
+            self.vertices[v1] = {v2}
+        else:
+            self.vertices[v1].add(v2)
+        if(len(self.vertices[v2]) == 0):
+            self.vertices[v2] = {v1}
+        else:
+            self.vertices[v2].add(v1)
+
+            sorted(self.vertices[v1])
+            sorted(self.vertices[v2])
+
     def bft(self, starting_vertex):
-        """
-        Print each vertex in breadth-first order
-        beginning from starting_vertex.
-        """
-        pass  # TODO
+        # start with top node
+        # see neighbor nodes 
+        neighborNodesToVisit = Queue()
+        visitedObj = {}
+        visitedNodes = []
+        
+        # use queue to keep track of nodes that you need to visit. 
+        for vertice in self.vertices[starting_vertex]:
+            neighborNodesToVisit.enqueue(vertice)
+            visitedObj[vertice] = False
+        
+        currentLayer = []
+
+        while not neighborNodesToVisit.size == 0:
+            node = neighborNodesToVisit.dequeue()
+
+            # visit each node 
+            if not visitedObj[node]:
+                visitedNodes.append(node)
+                currentLayer.append(node)
+                visitedObj[node] = True
+
+            # after going through each neighbor nodes of the first layer         
+            if neighborNodesToVisit.size == 0:
+                 for vertice in currentLayer:
+                    # check if this vertice has not been visited yet 
+                    if not visitedObj[vertice]:
+                    # and add the neighbor nodes of the next layer into the queue
+                        neighborNodesToVisit.enqueue(self.vertices[vertice])
+                        # indicate we need to visit it
+                
+                currentLayer = []
+        
+         # stop the BFT after there are no more objs in the queue
+         # which means we can't visit anywhere else anymore
+
     def dft(self, starting_vertex):
         """
         Print each vertex in depth-first order
@@ -52,6 +89,16 @@ class Graph:
         pass  # TODO
 
 
+graph1 = Graph()  # Instantiate your graph
+graph1.add_vertex('0')
+graph1.add_vertex('1')
+graph1.add_vertex('2')
+graph1.add_vertex('3')
+graph1.add_edge('0', '1')
+graph1.add_edge('0', '3')
+print("StartTest")
+print(graph1.vertices)
+print("EndTest")
 
 
 
