@@ -106,21 +106,60 @@ class Graph:
                     # conduct recursion per each individual chain, to see if each verticie has a child
                     visited.add(dft_recursive(v))
         # this maintains stack last out first in rule
-
-        pass  # TODO
     def bfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing the shortest path from
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        pass  # TODO
+        # condition to check 
+        currentVertex = starting_vertex
+
+        # queue system for neighbors:
+        neighborNodesToVisit = Queue()
+
+        visited = set()
+        path = []
+
+        # make sure current vertex does not equal destination vertex
+        while currentVertex != destination_vertex: 
+            currentVertex = neighborNodesToVisit.dequeue()
+            if currentVertex not in visited:
+                visited.add(node)
+            # the breadth first search will be looking for the shortest "cake", or layer that leads us to the destination vertex
+            if neighborNodesToVisit.size == 0:
+                for vertice in self.vertices[currentVertex]:
+                    neighborNodesToVisit.enqueue(vertice)
+            # this code will break id currentVertex is destination_vertex
+
+        # after hitting destination vertex, go backwards to calculate the path needed to reach
+        path.append(destination_vertex)
+
+        # choose the path based on already visited breadth search path, avoid nodes that were not visited. 
+        while currentVertex != starting_vertex:
+            for vertice in self.vertices[currentVertex]:
+                if vertice in visited:
+                    currentVertex = vertice
+                    path.append(currentVertex)
+                    break 
+        
+        # make sure the parent verticies have been visited to add to the path
+
+        # return the path 
+        return path
+
     def dfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
         depth-first order.
         """
+
+        # what is considered shortest
+        # keep track of all possible paths
+        # count the length of each path
+        # return the shortest path
+
         pass  # TODO
 
 
