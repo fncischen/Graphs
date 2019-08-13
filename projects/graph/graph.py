@@ -11,61 +11,31 @@ class Graph:
         self.vertices[vertex] = set()
     def add_edge(self, v1, v2):
 
-        if(len(self.vertices[v1]) == 0):
-            self.vertices[v1] = {v2}
-        else:
+        if v1 in self.vertices and v2 in self.vertices:
             self.vertices[v1].add(v2)
-        if(len(self.vertices[v2]) == 0):
-            self.vertices[v2] = {v1}
         else:
-            self.vertices[v2].add(v1)
-
-            sorted(self.vertices[v1])
-            sorted(self.vertices[v2])
+            raise IndexError('One or both of those vertices do not exist.')
+  
 
     def bft(self, starting_vertex):
-        # start with top node
-        # see neighbor nodes 
-        neighborNodesToVisit = Queue()
-        visitedObj = {}
-        visitedNodes = []
-        
-        # use queue to keep track of nodes that you need to visit. 
-        for vertice in self.vertices[starting_vertex]:
-            neighborNodesToVisit.enqueue(vertice)
-        
-        currentLayer = []
-
-        while not neighborNodesToVisit.size == 0:
-            node = neighborNodesToVisit.dequeue()
-
-            # visit each node and keep track
-            if not visitedObj[node]:
-                visitedNodes.append(node)
-                currentLayer.append(node)
-                visitedObj[node] = True
-
-            # after going through each neighbor nodes of the first layer         
-            if neighborNodesToVisit.size == 0:
-                 for vertice in currentLayer:
-                    # check if this vertice has not been visited yet 
-                    if not visitedObj[vertice]:
-                    # and add the neighbor nodes of the next layer into the queue 
-                    # new nodes to visit
-                        neighborNodesToVisit.enqueue(self.vertices[vertice])
-                        # indicate we need to visit it
-                
-                currentLayer = []
-        
-         # stop the BFT after there are no more objs in the queue
-         # which means we can't visit anywhere else anymore'
-        print(visitedNodes)
-
+        # Create an empty stack and push the starting vertex ID
+        q = Stack()
+        q.push(starting_vertex)
+        # Create a Set to store visited vertices
+        visited = set()
+        # While the stack is not empty...
+        while q.size() > 0:
+         # Pop the first vertex
+            v = q.pop()
+            if v not in visited:
+            # Mark it as visited...
+                print(v)
+                visited.add(v)
+                # Then add all of its neighbors to the top of the stack
+                for next_vert in self.vertices[v]:
+                    q.push(next_vert)
+       
     def dft(self, starting_vertex):
-
-        # question
-        # if there is more than one neighbor to traverse after going to next layer
-        # loop from left to right
 
         # Create an empty stack and push the starting vertex ID
         s = Stack()
@@ -92,13 +62,13 @@ class Graph:
         s = Stack()
         visited = set()
         # if there is only one node; return this node 
-        if self.vertices[starting_vertex].size == 0:
+        if len(self.vertices[starting_vertex]) == 0:
             visited.add(starting_vertex)
             return visited
         else:
             # add all child verticies in stack
             for vertice in self.vertices[starting_vertex]:
-                s.add(vertice)
+                s.push(vertice)
             while s.size() > 0:
                 v = s.pop()
                 # last in first out
@@ -119,34 +89,40 @@ class Graph:
         neighborNodesToVisit = Queue()
 
         visited = set()
-        path = []
+        # path = []
 
         # make sure current vertex does not equal destination vertex
         while currentVertex != destination_vertex: 
-            currentVertex = neighborNodesToVisit.dequeue()
+            path = neighborNodesToVisit.dequeue()
+            currentVertex = path[-1]
+
             if currentVertex not in visited:
+                if currentVertex == destination_vertex:
+                    return path 
                 visited.add(node)
             # the breadth first search will be looking for the shortest "cake", or layer that leads us to the destination vertex
-            if neighborNodesToVisit.size == 0:
+            # if neighborNodesToVisit.size == 0:
                 for vertice in self.vertices[currentVertex]:
-                    neighborNodesToVisit.enqueue(vertice)
+
+                    new_path = list(path)
+                    new_path.append(vertice)
+                    neighborNodesToVisit.enqueue(new_path)
             # this code will break id currentVertex is destination_vertex
 
         # after hitting destination vertex, go backwards to calculate the path needed to reach
-        path.append(destination_vertex)
 
         # choose the path based on already visited breadth search path, avoid nodes that were not visited. 
-        while currentVertex != starting_vertex:
-            for vertice in self.vertices[currentVertex]:
-                if vertice in visited:
-                    currentVertex = vertice
-                    path.append(currentVertex)
-                    break 
+        # while currentVertex != starting_vertex:
+        #     for vertice in self.vertices[currentVertex]:
+        #         if vertice in visited:
+        #             currentVertex = vertice
+        #             path.append(currentVertex)
+        #             break 
         
         # make sure the parent verticies have been visited to add to the path
 
         # return the path 
-        return path
+        return None
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -154,9 +130,13 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
+        s = Stack()
+        visited = set()
+
 
         # what is considered shortest
         # keep track of all possible paths
+        
         # count the length of each path
         # return the shortest path
 
