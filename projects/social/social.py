@@ -71,8 +71,14 @@ class SocialGraph:
                         new_path.append(friend)
                         friends.enqueue(new_path)
                 # this code will break id currentVertex is destination_vertex
-            
-        return allPaths
+        
+        totalLengths = 0
+
+        for path in allPaths:
+            totalLengths += len(allPaths[path])
+
+        averageDegreesOfSep = totalLengths/len(allPaths)
+        return averageDegreesOfSep
         
     def populateGraph(self, numUsers, avgFriendships):
         """
@@ -110,7 +116,7 @@ class SocialGraph:
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populateGraph(10, 2)
-    print(sg.friendships)
+    sg.populateGraph(1000, 5)
+    # print(sg.friendships)
     connections = sg.getAllSocialPaths(1)
-    print(connections)
+    print("Degrees of Separation", connections)
