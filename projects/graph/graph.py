@@ -29,11 +29,13 @@ class Graph:
             v = q.pop()
             if v not in visited:
             # Mark it as visited...
-                print(v)
+                # print(v)
                 visited.add(v)
                 # Then add all of its neighbors to the top of the stack
                 for next_vert in self.vertices[v]:
                     q.push(next_vert)
+
+        return visited
        
     def dft(self, starting_vertex):
 
@@ -49,32 +51,40 @@ class Graph:
              # If that vertex has not been visited...
             if v not in visited:
             # Mark it as visited...
-                print(v)
+                # print(v)
                 visited.add(v)
             # Then add all of its neighbors to the top of the stack
                 for next_vert in self.vertices[v]:
                     s.push(next_vert)
 
-        print(visited)
+        return visited
         
-    def dft_recursive(self, starting_vertex):
+    def dft_recursive(self, starting_vertex, visited=[]):
+
+        visited.append(starting_vertex)
+        for child_vert in self.vertices[starting_vertex]:
+            if child_vert not in visited:
+                self.dft_recursive(child_vert, visited)
         
-        s = Stack()
-        visited = set()
-        # if there is only one node; return this node 
-        if len(self.vertices[starting_vertex]) == 0:
-            visited.add(starting_vertex)
-            return visited
-        else:
-            # add all child verticies in stack
-            for vertice in self.vertices[starting_vertex]:
-                s.push(vertice)
-            while s.size() > 0:
-                v = s.pop()
-                # last in first out
-                if v not in visited:
-                    # conduct recursion per each individual chain, to see if each verticie has a child
-                    visited.add(dft_recursive(v))
+        return visited
+        
+        # s = Stack()
+        # if visited == None:
+        #     visited = set()
+        # # if there is only one node; return this node 
+        # if len(self.vertices[starting_vertex]) == 0:
+        #     visited.add(starting_vertex)
+        #     return visited
+        # else:
+        #     # add all child verticies in stack
+        #     for vertice in self.vertices[starting_vertex]:
+        #         s.push(vertice)
+        #     while s.size() > 0:
+        #         v = s.pop()
+        #         # last in first out
+        #         if v not in visited:
+        #             # conduct recursion per each individual chain, to see if each verticie has a child
+        #             self.dft_recursive(v, visited)
         # this maintains stack last out first in rule
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -87,19 +97,20 @@ class Graph:
 
         # queue system for neighbors:
         neighborNodesToVisit = Queue()
+        neighborNodesToVisit.enqueue([starting_vertex])
 
-        visited = set()
+        visited = []
         # path = []
 
         # make sure current vertex does not equal destination vertex
-        while currentVertex != destination_vertex: 
+        while neighborNodesToVisit.size() > 0: 
             path = neighborNodesToVisit.dequeue()
             currentVertex = path[-1]
 
             if currentVertex not in visited:
                 if currentVertex == destination_vertex:
                     return path 
-                visited.add(node)
+                visited.append(currentVertex)
             # the breadth first search will be looking for the shortest "cake", or layer that leads us to the destination vertex
             # if neighborNodesToVisit.size == 0:
                 for vertice in self.vertices[currentVertex]:
@@ -109,19 +120,6 @@ class Graph:
                     neighborNodesToVisit.enqueue(new_path)
             # this code will break id currentVertex is destination_vertex
 
-        # after hitting destination vertex, go backwards to calculate the path needed to reach
-
-        # choose the path based on already visited breadth search path, avoid nodes that were not visited. 
-        # while currentVertex != starting_vertex:
-        #     for vertice in self.vertices[currentVertex]:
-        #         if vertice in visited:
-        #             currentVertex = vertice
-        #             path.append(currentVertex)
-        #             break 
-        
-        # make sure the parent verticies have been visited to add to the path
-
-        # return the path 
         return None
 
     def dfs(self, starting_vertex, destination_vertex):
@@ -130,17 +128,38 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        s = Stack()
-        visited = set()
+
+         # condition to check 
+        # currentVertex = starting_vertex
+
+         # queue system for neighbors:
+        neighborNodesToVisit = Stack()
+        neighborNodesToVisit.push([starting_vertex])
+
+        visited = []
+         # path = []
+ 
+         # make sure current vertex does not equal destination vertex
+        while neighborNodesToVisit.size() > 0: 
+            path = neighborNodesToVisit.pop()
+            currentVertex = path[-1]
+ 
+            if currentVertex not in visited:
+                if currentVertex == destination_vertex:
+                    return path 
+                visited.append(currentVertex)
+             # the breadth first search will be looking for the shortest "cake", or layer that leads us to the destination vertex
+             # if neighborNodesToVisit.size == 0:
+                for vertice in self.vertices[currentVertex]:
+ 
+                    new_path = list(path)
+                    new_path.append(vertice)
+                    neighborNodesToVisit.push(new_path)
+             # this code will break id currentVertex is destination_vertex
+ 
+        return None
 
 
-        # what is considered shortest
-        # keep track of all possible paths
-        
-        # count the length of each path
-        # return the shortest path
-
-        pass  # TODO
 
 
 graph1 = Graph()  # Instantiate your graph
@@ -190,7 +209,7 @@ if __name__ == '__main__':
         1, 2, 4, 7, 6, 3, 5
         1, 2, 4, 6, 3, 5, 7
     '''
-    graph.dft(1)
+    print(graph.dft(1))
 
     '''
     Valid BFT paths:
@@ -207,7 +226,7 @@ if __name__ == '__main__':
         1, 2, 4, 3, 7, 6, 5
         1, 2, 4, 3, 7, 5, 6
     '''
-    graph.bft(1)
+    print(graph.bft(1))
 
     '''
     Valid DFT recursive paths:
@@ -216,7 +235,7 @@ if __name__ == '__main__':
         1, 2, 4, 7, 6, 3, 5
         1, 2, 4, 6, 3, 5, 7
     '''
-    graph.dft_recursive(1)
+    print(graph.dft_recursive(1))
 
     '''
     Valid BFS path:
