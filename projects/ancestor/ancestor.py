@@ -61,15 +61,19 @@ class SocialGraph:
                 # if he or she has no parents, we've hit the end of the path
                 
                 if len(parentsOfCurrentChild) == 0:
+                    # store this path into allPossiblePaths
                     allPossiblePaths.append(path)
                 else: 
-                    # then add possible paths to traverse upwards
+                    # if he / she has parents, time to add those paths onto the stack
+                    # for further traversing up the ladder
                     for parent in parentsOfCurrentChild:
                         newPath = list(path)
                         # add the path of one OR both parents into stack
                         newPath.append(parent)
                         s.push(newPath)
         
+
+        # step 3) after compiling all possible paths using DFS, sort them to find the longest path
         allPossiblePaths = sorted(allPossiblePaths)
         longestPath = allPossiblePaths[-1]
         return longestPath
