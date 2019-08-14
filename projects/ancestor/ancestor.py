@@ -22,7 +22,7 @@ class SocialGraph:
             child = parentChild[1]
 
             # parent has more than one child
-            if self.ancestors[parent]:
+            if parent in self.ancestors.keys():
                 self.ancestors[parent].append(child)
             else:
                 self.ancestors[parent] = [child] 
@@ -75,11 +75,24 @@ class SocialGraph:
 
         # step 3) after compiling all possible paths using DFS, sort them to find the longest path
         allPossiblePaths = sorted(allPossiblePaths)
-        longestPath = allPossiblePaths[-1]
-        return longestPath
+        print("All possible paths", allPossiblePaths)
+        longestPath = allPossiblePaths[0]
+        earliestAncestor = longestPath[-1]
+        return earliestAncestor
 
 s = SocialGraph()
 
+parentsChild = [  
+  [1,3],
+  [2,3],
+  [3,6],
+  [5,6],
+  [5,7],
+  [4,5],
+  [4,8],
+  [8,9],
+  [11,8],
+  [10,1]
+]
 
-
-
+print(s.earliest_ancestor(parentsChild,6))
